@@ -2,12 +2,20 @@
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
   "release-type": "node",
   "include-component-in-tag": false,
-  "packages": {
-    "packages/config-resolver": {
-      "component": "@slvn-opencode/config-resolver"
+  "initial-version": "0.1.0",
+  "extra-files": [
+    {
+      "type": "json",
+      "path": "packages/config-resolver/package.json",
+      "jsonpath": "$.version"
     },
-    "packages/model-providers": {
-      "component": "@slvn-opencode/model-providers"
+    {
+      "type": "json",
+      "path": "packages/model-providers/package.json",
+      "jsonpath": "$.version"
     }
+  ],
+  "packages": {
+    ".": {}
   }
 }

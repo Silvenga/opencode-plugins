@@ -8,7 +8,7 @@ export default Plugin.define({
     const status = await resolver.status({}).catch(() => undefined);
     if (status?.state === "failed") {
       context.ui.toast.show({
-        message: `@slvn-opencode/config-resolver failed to load configs${status.error === undefined ? "" : `: ${status.error}`}`,
+        message: `@slvnco-opencode/config-resolver failed to load configs${status.error === undefined ? "" : `: ${status.error}`}`,
         variant: "error",
       });
     }

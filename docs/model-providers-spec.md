@@ -1,4 +1,4 @@
-# @slvn-opencode/model-providers
+# @slvnco-opencode/model-providers
 
 Goal: Apply central and local configuration to OpenCode provider and model definitions.
 

@@ -1,5 +1,5 @@
 import { Plugin } from "@opencode/plugin";
-import { ConfigResolverRpc } from "@slvn-opencode/config-resolver/rpc";
+import { ConfigResolverRpc } from "@slvnco-opencode/config-resolver/rpc";
 import { preparePipeline } from "./pipeline.js";
 import { ModelProvidersRpc, type Status } from "./rpc/contract.js";
 import { makeHandlers } from "./rpc/handlers.js";

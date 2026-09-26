@@ -8,7 +8,7 @@ export default Plugin.define({
     const status = await client.status({}).catch(() => undefined);
     if (status?.state === "failed") {
       context.ui.toast.show({
-        message: `@slvn-opencode/model-providers failed to apply config${status.error === undefined ? "" : `: ${status.error.stage}: ${status.error.message}`}`,
+        message: `@slvnco-opencode/model-providers failed to apply config${status.error === undefined ? "" : `: ${status.error.stage}: ${status.error.message}`}`,
         variant: "error",
       });
     }

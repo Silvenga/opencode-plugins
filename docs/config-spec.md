@@ -1,6 +1,6 @@
-# @slvn-opencode/config-resolver
+# @slvnco-opencode/config-resolver
 
-Goal: Provides central config resolution to other @slvn-opencode plugins.
+Goal: Provides central config resolution to other @slvnco-opencode plugins.
 
 ## Plugin Inputs
 

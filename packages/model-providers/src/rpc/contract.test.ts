@@ -1,4 +1,4 @@
-import { ConfigResolverRpc } from "@slvn-opencode/config-resolver/rpc";
+import { ConfigResolverRpc } from "@slvnco-opencode/config-resolver/rpc";
 import { describe, expect, test } from "vitest";
 import { ModelProvidersRpc, type Status } from "./contract.js";
 import { makeHandlers } from "./handlers.js";

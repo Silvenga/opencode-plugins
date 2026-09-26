@@ -1,10 +1,19 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
-  "name": "@slvn-opencode/model-providers",
-  "version": "0.0.0",
-  "private": true,
+  "name": "@slvnco-opencode/model-providers",
+  "version": "0.1.0",
   "license": "MIT",
   "author": "Mark Lopez <m@silvenga.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Silvenga/opencode-stack.git",
+    "directory": "packages/model-providers"
+  },
+  "files": [
+    "src",
+    "!src/**/*.test.ts",
+    "!src/_tests/**"
+  ],
   "type": "module",
   "main": "./src/index.ts",
   "exports": {
@@ -12,12 +21,15 @@
     "./rpc": "./src/rpc/contract.ts",
     "./tui": "./src/tui.ts"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "vitest run"
   },
   "dependencies": {
     "@opencode/plugin": "^2.0.11",
-    "@slvn-opencode/config-resolver": "workspace:*",
+    "@slvnco-opencode/config-resolver": "workspace:*",
     "zod": "^4.6.5"
   },
   "devDependencies": {

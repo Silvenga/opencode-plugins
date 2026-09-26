@@ -1,4 +1,4 @@
-# @slvn-opencode/plugins
+# @slvnco-opencode/plugins
 
 A pnpm workspace of independent plugins for OpenCode v2.
 
@@ -8,7 +8,7 @@ Behavioral decisions live in `docs/<plugin-name>-spec.md`. Read the relevant spe
 
 ## Development Conventions
 
-- Use package scope is `@slvn-opencode` for new packages.
+- Use package scope is `@slvnco-opencode` for new packages.
 - Write the minimal tests required to prove the functionality matches the spec.
     - Tests live next to source: `src/foo.ts` pairs with `src/foo.test.ts`.
     - Test names follow `When <condition> then <action> should <expected>` in Arrange-Act-Assert form.
@@ -26,7 +26,7 @@ Behavioral decisions live in `docs/<plugin-name>-spec.md`. Read the relevant spe
 
 Plugins should be independent and may be loaded in any order.
 
-The `@slvn-opencode/config-resolver` is a shared plugin and provides central configuration management using RPC (`getConfig`). The `config-resolver` is assumed to be setup first (meaning, will be accessible to all other plugins).Within the context of a separate plugin, do not assume `config-resolver` is providing configurations (was loaded previously, or will be loaded at all), each plugin should support configuration independently as a fallback.
+The `@slvnco-opencode/config-resolver` is a shared plugin and provides central configuration management using RPC (`getConfig`). The `config-resolver` is assumed to be setup first (meaning, will be accessible to all other plugins).Within the context of a separate plugin, do not assume `config-resolver` is providing configurations (was loaded previously, or will be loaded at all), each plugin should support configuration independently as a fallback.
 
 Before starting work, make you've read at least once:
 
