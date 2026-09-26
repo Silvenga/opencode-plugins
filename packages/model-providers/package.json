@@ -19,6 +19,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./rpc": "./src/rpc/contract.ts",
+    "./schema": "./src/schema.ts",
     "./tui": "./src/tui.ts"
   },
   "publishConfig": {

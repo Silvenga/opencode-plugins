@@ -22,3 +22,4 @@ jobs:
           pnpm install --frozen-lockfile
           pnpm lint
           pnpm test
+          pnpm --filter @slvnco-opencode/cli run build

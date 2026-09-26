@@ -34,6 +34,8 @@ jobs:
       fail-fast: false
       matrix:
         package:
+          - name: "@slvnco-opencode/cli"
+            dir: packages/cli
           - name: "@slvnco-opencode/config-resolver"
             dir: packages/config-resolver
           - name: "@slvnco-opencode/model-providers"

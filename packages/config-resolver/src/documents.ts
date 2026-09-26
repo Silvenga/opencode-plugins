@@ -5,17 +5,38 @@ export interface NamedConfig {
   readonly config: unknown;
 }
 
+export type DocumentResult = NamedConfig | { readonly error: Error };
+
 export function parseDocuments(yaml: string): NamedConfig[] {
+  const configs: NamedConfig[] = [];
+  for (const result of parseDocumentResults(yaml)) {
+    if ("error" in result) {
+      throw result.error;
+    }
+    configs.push(result);
+  }
+  return configs;
+}
+
+export function parseDocumentResults(yaml: string): DocumentResult[] {
   const documents = parseAllDocuments(yaml);
-  const results: NamedConfig[] = [];
+  const results: DocumentResult[] = [];
   for (const document of documents) {
     if (document.errors.length > 0) {
-      throw document.errors[0];
+      results.push({ error: document.errors[0] });
+      continue;
     }
     const value = document.toJS();
     if (value === null) {
       continue;
     }
+    results.push(toNamedConfig(value));
+  }
+  return results;
+}
+
+function toNamedConfig(value: unknown): DocumentResult {
+  try {
     if (typeof value !== "object" || Array.isArray(value)) {
       throw new Error("config document is not an object");
     }
@@ -26,9 +47,10 @@ export function parseDocuments(yaml: string): NamedConfig[] {
     }
     const config = record.config === undefined || record.config === null ? {} : record.config;
     assertJsonCompatible(config, "config");
-    results.push({ name, config });
+    return { name, config };
+  } catch (error) {
+    return { error: error instanceof Error ? error : new Error(String(error)) };
   }
-  return results;
 }
 
 function assertJsonCompatible(value: unknown, where: string): void {

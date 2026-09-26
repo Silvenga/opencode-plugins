@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { parseDocuments } from "./documents.js";
+import { parseDocuments, parseDocumentResults } from "./documents.js";
 
 describe("parseDocuments", () => {
   test("When a file has multiple documents then parseDocuments should return each named config in order", () => {
@@ -110,4 +110,77 @@ config: 2
     { name: "one", config: 1 },
     { name: "two", config: 2 },
   ]);
+});
+
+describe("parseDocumentResults", () => {
+  test("When all documents are valid then parseDocumentResults should return each config with no errors", () => {
+    const yaml = `
+---
+name: one
+config: 1
+---
+name: two
+config: 2
+`;
+    expect(parseDocumentResults(yaml)).toEqual([
+      { name: "one", config: 1 },
+      { name: "two", config: 2 },
+    ]);
+  });
+
+  test("When one document is invalid then parseDocumentResults should keep its position and return an error for it", () => {
+    const yaml = `
+---
+name: one
+config: 1
+---
+name: ""
+config: 2
+---
+name: two
+config: 3
+`;
+    const results = parseDocumentResults(yaml);
+    expect(results).toHaveLength(3);
+    expect(results[0]).toEqual({ name: "one", config: 1 });
+    expect("error" in (results[1] ?? { name: "", config: undefined })).toBe(true);
+    expect(results[2]).toEqual({ name: "two", config: 3 });
+  });
+
+  test("When the yaml cannot be parsed then parseDocumentResults should return one error result", () => {
+    const results = parseDocumentResults("key: [unclosed");
+    expect(results).toHaveLength(1);
+    expect("error" in (results[0] ?? { name: "", config: undefined })).toBe(true);
+  });
+
+  test("When a document is not an object then parseDocumentResults should return an error result for it", () => {
+    const yaml = `
+---
+name: one
+config: 1
+---
+- just
+- a list
+`;
+    const results = parseDocumentResults(yaml);
+    expect(results).toHaveLength(2);
+    expect(results[0]).toEqual({ name: "one", config: 1 });
+    expect("error" in (results[1] ?? { name: "", config: undefined })).toBe(true);
+  });
+
+  test("When a file contains empty documents then parseDocumentResults should skip them", () => {
+    expect(parseDocumentResults("name: a\nconfig: 1\n---\n")).toEqual([{ name: "a", config: 1 }]);
+  });
+
+  test("When a config value is not JSON compatible then parseDocumentResults should return an error result", () => {
+    const yaml = `
+---
+name: t
+config:
+  when: !!timestamp 2001-12-14
+`;
+    const results = parseDocumentResults(yaml);
+    expect(results).toHaveLength(1);
+    expect("error" in (results[0] ?? { name: "", config: undefined })).toBe(true);
+  });
 });
