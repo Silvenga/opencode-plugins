@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { makeEditor } from "./_tests/fake-editor.js";
+import { makeIntegrationEditor } from "./_tests/fake-integration-editor.js";
 import type { PluginConfig } from "./config.js";
 import { preparePipeline, type RemoteConfigResolver } from "./pipeline.js";
 
@@ -171,5 +172,95 @@ describe("Pipeline capture", () => {
     const first = editor.get("central")?.provider;
     pipeline.transform(editor);
     expect(editor.get("central")?.provider).toBe(first);
+  });
+});
+
+describe("Pipeline.registerIntegrations", () => {
+  test("When no config suppresses then registerIntegrations should register every provider", async () => {
+    const integrationEditor = makeIntegrationEditor();
+    const { pipeline } = await preparePipeline(remoteConfigResolver, localConfig);
+
+    pipeline.registerIntegrations(integrationEditor);
+
+    expect(integrationEditor.integrations.get("central")).toMatchObject({
+      id: "central",
+      name: "Central",
+    });
+    expect(integrationEditor.integrations.get("local")).toMatchObject({
+      id: "local",
+      name: "Local",
+    });
+  });
+
+  test("When the last config suppresses then registerIntegrations should register nothing", async () => {
+    const integrationEditor = makeIntegrationEditor();
+    const { pipeline } = await preparePipeline(remoteConfigResolver, {
+      providers: { local: { name: "Local" } },
+      suppressRegisteringIntegrations: true,
+    });
+
+    pipeline.registerIntegrations(integrationEditor);
+
+    expect(integrationEditor.integrations.size).toBe(0);
+  });
+
+  test("When only an earlier config suppresses then the last specified value wins", async () => {
+    const integrationEditor = makeIntegrationEditor();
+    const { pipeline } = await preparePipeline(
+      () =>
+        Promise.resolve({
+          config: {
+            providers: { central: { name: "Central" } },
+            suppressRegisteringIntegrations: true,
+          },
+        }),
+      { providers: { local: { name: "Local" } }, suppressRegisteringIntegrations: false },
+    );
+
+    pipeline.registerIntegrations(integrationEditor);
+
+    expect(integrationEditor.integrations.get("central")).toBeDefined();
+    expect(integrationEditor.integrations.get("local")).toBeDefined();
+  });
+
+  test("When a config leaves the flag unspecified then it should not override an earlier one", async () => {
+    const integrationEditor = makeIntegrationEditor();
+    const { pipeline } = await preparePipeline(
+      () =>
+        Promise.resolve({
+          config: {
+            providers: { central: { name: "Central" } },
+            suppressRegisteringIntegrations: true,
+          },
+        }),
+      { providers: { local: { name: "Local" } } },
+    );
+
+    pipeline.registerIntegrations(integrationEditor);
+
+    expect(integrationEditor.integrations.size).toBe(0);
+  });
+
+  test("When the plan failed then registerIntegrations should register nothing", async () => {
+    const integrationEditor = makeIntegrationEditor();
+    const { pipeline } = await preparePipeline(
+      () => Promise.resolve({ config: { providers: { bad: { name: 42 } } } }),
+      localConfig,
+    );
+
+    pipeline.registerIntegrations(integrationEditor);
+
+    expect(integrationEditor.integrations.size).toBe(0);
+  });
+
+  test("When the resolver is unavailable then registerIntegrations should register local providers only", async () => {
+    const integrationEditor = makeIntegrationEditor();
+    const unavailable = Object.assign(new Error("no server"), { type: "rpc.unavailable" });
+    const { pipeline } = await preparePipeline(() => Promise.reject(unavailable), localConfig);
+
+    pipeline.registerIntegrations(integrationEditor);
+
+    expect(integrationEditor.integrations.size).toBe(1);
+    expect(integrationEditor.integrations.get("local")).toBeDefined();
   });
 });

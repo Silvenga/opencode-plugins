@@ -15,6 +15,20 @@ export default Plugin.define({
     const remoteConfigResolver = async () => resolver.getConfig({ name: "model-providers" });
     const { pipeline, status } = await preparePipeline(remoteConfigResolver, ctx.options);
     state.status = status;
+    await ctx.integration.transform((editor) => {
+      try {
+        pipeline.registerIntegrations(editor);
+      } catch (error) {
+        state.status = {
+          state: "failed",
+          resolver: status.resolver,
+          error: {
+            stage: "application",
+            message: error instanceof Error ? error.message : String(error),
+          },
+        };
+      }
+    });
     await ctx.provider.transform((editor) => {
       try {
         pipeline.transform(editor);

@@ -34,6 +34,27 @@ describe("config schema shape", () => {
 });
 
 describe("config schema known-field validation", () => {
+  test("When suppressRegisteringIntegrations is a boolean then the schema should accept it", () => {
+    const parsed = pluginConfigSchema.safeParse({ suppressRegisteringIntegrations: true });
+    expect(parsed.success).toBe(true);
+    if (parsed.success) {
+      expect(parsed.data.suppressRegisteringIntegrations).toBe(true);
+    }
+  });
+
+  test("When suppressRegisteringIntegrations is omitted then the schema should leave it unspecified", () => {
+    const parsed = pluginConfigSchema.safeParse({ providers: {} });
+    expect(parsed.success).toBe(true);
+    if (parsed.success) {
+      expect(parsed.data.suppressRegisteringIntegrations).toBeUndefined();
+    }
+  });
+
+  test("When suppressRegisteringIntegrations is not a boolean then the schema should reject it", () => {
+    const parsed = pluginConfigSchema.safeParse({ suppressRegisteringIntegrations: "yes" });
+    expect(parsed.success).toBe(false);
+  });
+
   test("When provider name is a string then the schema should accept it", () => {
     const parsed = pluginConfigSchema.safeParse({
       providers: { "my-provider": { name: "My Provider" } },

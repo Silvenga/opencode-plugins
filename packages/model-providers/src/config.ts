@@ -43,11 +43,15 @@ const providerSchema = z.looseObject({
 export const pluginConfigSchema = z
   .looseObject({
     providers: z.record(z.string(), providerSchema).optional(),
+    suppressRegisteringIntegrations: z.boolean().optional(),
   })
   .nullish()
-  .transform((config) => ({
-    providers: config?.providers ?? {},
-  }));
+  .transform((config) => {
+    const suppress = config?.suppressRegisteringIntegrations;
+    return suppress == null
+      ? { providers: config?.providers ?? {} }
+      : { providers: config?.providers ?? {}, suppressRegisteringIntegrations: suppress };
+  });
 
 export type PluginConfig = z.output<typeof pluginConfigSchema>;
 export type ProviderConfig = z.output<typeof providerSchema>;

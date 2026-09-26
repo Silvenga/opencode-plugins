@@ -1,7 +1,8 @@
 import { pluginConfigSchema, type PluginConfig } from "./config.js";
 import type { Status } from "./rpc/contract.js";
+import { registerIntegration } from "./transforms/integration.js";
 import { transformConfig } from "./transforms/transform.js";
-import type { ProviderEditor } from "./types.js";
+import type { IntegrationEditor, ProviderEditor } from "./types.js";
 
 export type RemoteConfigResolver = () => Promise<{ config: unknown }>;
 
@@ -15,6 +16,21 @@ export class Pipeline {
   transform(editor: ProviderEditor): void {
     for (const config of this.configs) {
       transformConfig(editor, config);
+    }
+  }
+
+  registerIntegrations(editor: IntegrationEditor): void {
+    const suppressed = this.configs.reduce<boolean | undefined>(
+      (current, config) => config.suppressRegisteringIntegrations ?? current,
+      undefined,
+    );
+    if (suppressed) {
+      return;
+    }
+    for (const config of this.configs) {
+      for (const [id, providerConfig] of Object.entries(config.providers)) {
+        registerIntegration(editor, id, providerConfig);
+      }
     }
   }
 }

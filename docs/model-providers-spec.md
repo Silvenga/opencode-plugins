@@ -4,11 +4,12 @@ Goal: Apply central and local configuration to OpenCode provider and model defin
 
 ## Configuration
 
-Read central configuration through `getConfig({ name: "model-providers" })` and local configuration from plugin options. Both default to `{}` and use an object with an optional `providers` map, keyed by provider ID. Each entry follows OpenCode's provider configuration shape: an optional `models` map keyed by model ID, plus optional provider-level overlays. A central configuration document, for example:
+Read central configuration through `getConfig({ name: "model-providers" })` and local configuration from plugin options. Both default to `{}` and use an object with an optional `providers` map, keyed by provider ID, plus an optional `suppressRegisteringIntegrations` boolean, defaulting to `false`. Each `providers` entry follows OpenCode's provider configuration shape: an optional `models` map keyed by model ID, plus optional provider-level overlays. A central configuration document, for example:
 
 ```yaml
 name: model-providers
 config:
+  suppressRegisteringIntegrations: true
   providers:
     my-provider:
       name: My Provider
@@ -42,11 +43,28 @@ A definition that does not already exist starts from OpenCode's own defaults for
 
 Overlay supplied values while preserving unspecified data, including nested object fields. Supplied arrays replace existing arrays in full.
 
+## Integration Registration
+
+Provided providers appear in OpenCode's integration surfaces: `opencode auth login <provider-id>` and the Connect an integration picker. OpenCode resolves a provider's credentials through the integration registry, so providers without a registered integration cannot be authenticated through OpenCode.
+
+During plugin setup, before the provider transform, apply integration registration for the same validated configurations, in the same order:
+
+- For each provider ID in `providers`, create the integration when it does not already exist, with a `key` method labeled `Manually enter API Key`.
+- When the integration already exists, keep its existing methods. Set the integration name from the provider's `name` when given.
+- When the provider defines `env`, also add an `env` method listing those variable names.
+- When `suppressRegisteringIntegrations` is `true` for a configuration, that configuration registers no integrations.
+
+Precedence for `suppressRegisteringIntegrations` follows application order: the last configuration that specifies it wins, and a configuration that leaves it unspecified does not override an earlier one.
+
+When registration is suppressed, providers are still applied to the provider registry as configured; only integration registration is skipped.
+
 ## Failure Handling
 
 On `rpc.unavailable`, use empty central configuration and continue with local configuration. Other RPC errors or incompatible responses fail the load.
 
 Acquisition or validation failure applies neither configuration and must not block OpenCode.
+
+Integration registration failure is independent of provider application: a failure in one does not undo or prevent the other. Registration failure reports through `status` with stage `application` and must not block OpenCode.
 
 Application itself is expected not to fail: validation has already accepted both configurations before any definition is mutated. If application fails anyway, report the failure through `status` and do not block OpenCode.
 
