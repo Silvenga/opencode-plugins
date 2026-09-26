@@ -15,7 +15,7 @@ if [ -f "$ROOT/.env" ]; then
   set +a
 fi
 
-OPENCODE_VERSION="${OPENCODE_VERSION:-2.0.10}"
+OPENCODE_VERSION="${OPENCODE_VERSION:-2.0.18}"
 OPENCODE_URL="https://opencode.ai/files/bin/$OPENCODE_VERSION/opencode-linux-x64.tar.gz"
 
 if [ ! -f "$CACHE/opencode" ]; then
@@ -31,7 +31,7 @@ fi
 rm -rf "$DIST"
 for pkg in "$ROOT"/packages/*/; do
   name="$(basename "$pkg")"
-  pnpm_config_inject_workspace_packages=true pnpm deploy --filter="@slvn-opencode/$name" --prod "$DIST/$name"
+  pnpm_config_inject_workspace_packages=true pnpm deploy --filter="@slvnco-opencode/$name" --prod "$DIST/$name"
   printf 'export { default } from "./src/index.js";\n' > "$DIST/$name/index.ts"
   if [ -f "$pkg/src/tui.ts" ]; then
     printf 'export { default } from "./src/tui.js";\n' > "$DIST/$name/tui.ts"
