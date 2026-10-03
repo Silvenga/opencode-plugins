@@ -15,7 +15,7 @@ if [ -f "$ROOT/.env" ]; then
   set +a
 fi
 
-OPENCODE_VERSION="${OPENCODE_VERSION:-2.0.18}"
+OPENCODE_VERSION="${OPENCODE_VERSION:-2.0.22}"
 OPENCODE_URL="https://opencode.ai/files/bin/$OPENCODE_VERSION/opencode-linux-x64.tar.gz"
 
 if [ ! -f "$CACHE/opencode" ]; then
@@ -52,7 +52,10 @@ cat > "$STATE/opencode.jsonc" <<JSON
     {
       "package": "file://$DIST/config-resolver",
       "options": {
-        "paths": ["\$(env:SLVN_DEV_CONFIG)"]
+        "paths": [
+          "https://infer.service.garland.slvn.co/.well-known/slvn-opencode/config.yaml",
+          "\$(env:SLVN_DEV_CONFIG)"
+        ]
       }
     },
     {
