@@ -4,7 +4,7 @@ A pnpm workspace of independent plugins for OpenCode v2.
 
 ## Spec-Driven Design
 
-Behavioral decisions live in `docs/<plugin-name>-spec.md`. Read the relevant spec before changing plugin behavior, and update it in the same change when behavior changes. `docs/AGENTS.md` defines the spec conventions.
+Behavioral decisions live in `docs/specs/<plugin-name>-spec.md`. Read the relevant spec before changing plugin behavior, and update it in the same change when behavior changes. `docs/specs/AGENTS.md` defines the spec conventions.
 
 ## Development Conventions
 

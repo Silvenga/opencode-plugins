@@ -4,7 +4,7 @@ This directory holds one spec per plugin. Specs are the contract between intent 
 
 ## File Layout
 
-- One spec per plugin: `docs/<plugin-name>-spec.md`, matching `packages/<plugin-name>`.
+- One spec per plugin: `docs/specs/<plugin-name>-spec.md`, matching `packages/<plugin-name>`.
 - The spec owns behavior. When a decision changes what the plugin does, update the spec in the same change as the code. A spec that lags the implementation is a defect.
 - Read the spec before changing plugin behavior, and after reading it, trust it over chat history. Resolutions recorded here supersede anything decided conversationally.
 
