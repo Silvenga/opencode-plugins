@@ -6,7 +6,7 @@
   "author": "Mark Lopez <m@silvenga.com>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Silvenga/opencode-stack.git",
+    "url": "git+https://github.com/Silvenga/opencode-plugins.git",
     "directory": "packages/config-resolver"
   },
   "files": [

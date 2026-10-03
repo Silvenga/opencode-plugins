@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/opencode-stack.iml" filepath="$PROJECT_DIR$/.idea/opencode-stack.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/opencode-plugins.iml" filepath="$PROJECT_DIR$/.idea/opencode-plugins.iml" />
     </modules>
   </component>
 </project>
