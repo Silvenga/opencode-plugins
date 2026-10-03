@@ -10,6 +10,7 @@
     "directory": "packages/config-resolver"
   },
   "files": [
+    "README.md",
     "src",
     "!src/**/*.test.ts",
     "!src/_tests/**"
