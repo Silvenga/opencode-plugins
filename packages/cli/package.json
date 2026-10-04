@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@slvnco-opencode/config-resolver": "workspace:*",
+    "@slvnco-opencode/mcp-servers": "workspace:*",
     "@slvnco-opencode/model-providers": "workspace:*",
     "@types/node": "^26.6.4",
     "commander": "^15.0.0",

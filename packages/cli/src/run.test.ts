@@ -46,6 +46,15 @@ async function exec(captured: Captured, argv: string[]): Promise<number> {
 }
 
 describe("run", () => {
+  test("When MCP documents contain valid and invalid servers then validate should report both outcomes", async () => {
+    const file = await fixture(
+      "name: mcp-servers\nconfig:\n  servers:\n    docs:\n      type: remote\n      url: https://example.com\n---\nname: mcp-servers\nconfig:\n  servers:\n    docs:\n      disabled: true\n",
+    );
+    const c = capture();
+    expect(await exec(c, ["validate", file])).toBe(1);
+    expect(c.out[0]).toBe("PASS: mcp-servers\n");
+    expect(c.out[1]).toMatch(/^FAILED: mcp-servers:/);
+  });
   test("When no verb is given then run should print help to stderr and exit 1", async () => {
     const c = capture();
     expect(await exec(c, [])).toBe(1);

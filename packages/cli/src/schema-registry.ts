@@ -1,3 +1,4 @@
+import { schema as mcpServers } from "@slvnco-opencode/mcp-servers/schema";
 import { schema as modelProviders } from "@slvnco-opencode/model-providers/schema";
 import type { z } from "zod";
 
@@ -6,7 +7,7 @@ export interface RegistryEntry {
   readonly schema: z.ZodType;
 }
 
-const registry: ReadonlyArray<RegistryEntry> = [modelProviders];
+const registry: ReadonlyArray<RegistryEntry> = [modelProviders, mcpServers];
 
 export function entries(): ReadonlyArray<RegistryEntry> {
   return registry;

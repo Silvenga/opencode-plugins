@@ -35,3 +35,15 @@ Configures providers/models and registers integrations to support OpenCode manag
   ]
 }
 ```
+
+### @slvnco-opencode/mcp-servers
+
+Configures MCP servers.
+
+```jsonc
+{
+  "plugins": [
+    "@slvnco-opencode/mcp-servers"
+  ]
+}
+```

@@ -6,6 +6,11 @@
   "extra-files": [
     {
       "type": "json",
+      "path": "packages/mcp-servers/package.json",
+      "jsonpath": "$.version"
+    },
+    {
+      "type": "json",
       "path": "packages/cli/package.json",
       "jsonpath": "$.version"
     },

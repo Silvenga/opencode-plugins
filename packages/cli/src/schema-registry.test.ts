@@ -2,6 +2,13 @@ import { describe, expect, test } from "vitest";
 import { entries, findSchema } from "./schema-registry.js";
 
 describe("registry", () => {
+  test("When MCP servers are registered then lookup should validate their configuration", () => {
+    expect(
+      findSchema("mcp-servers")?.safeParse({
+        servers: { docs: { type: "remote", url: "https://example.com" } },
+      }).success,
+    ).toBe(true);
+  });
   test("When the registry is read then it should contain model-providers", () => {
     const names = entries().map((entry) => entry.name);
     expect(names).toContain("model-providers");

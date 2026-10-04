@@ -190,6 +190,9 @@ importers:
       '@slvnco-opencode/config-resolver':
         specifier: workspace:*
         version: link:../config-resolver
+      '@slvnco-opencode/mcp-servers':
+        specifier: workspace:*
+        version: link:../mcp-servers
       '@slvnco-opencode/model-providers':
         specifier: workspace:*
         version: link:../model-providers
@@ -220,6 +223,28 @@ importers:
       yaml:
         specifier: ^2.9.1
         version: 2.9.1
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.5
+    devDependencies:
+      '@types/node':
+        specifier: ^26.6.4
+        version: 26.6.4
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+      vitest:
+        specifier: ^5.0.3
+        version: 5.0.3(@opentelemetry/api@1.9.0)(@types/node@26.6.4)(@vitest/coverage-v8@5.0.3)(vite@8.3.2(@types/node@26.6.4)(esbuild@0.28.2)(yaml@2.9.1))
+
+  packages/mcp-servers:
+    dependencies:
+      '@opencode/plugin':
+        specifier: ^2.0.22
+        version: 2.0.22(@opentelemetry/semantic-conventions@1.43.0)(redis@6.3.0(@opentelemetry/api@1.9.0))
+      '@slvnco-opencode/config-resolver':
+        specifier: workspace:*
+        version: link:../config-resolver
       zod:
         specifier: ^4.6.5
         version: 4.6.5

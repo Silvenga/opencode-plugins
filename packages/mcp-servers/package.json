@@ -1,0 +1,40 @@
+{
+  "name": "@slvnco-opencode/mcp-servers",
+  "version": "0.1.0",
+  "license": "MIT",
+  "author": "Mark Lopez <m@silvenga.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Silvenga/opencode-plugins.git",
+    "directory": "packages/mcp-servers"
+  },
+  "files": [
+    "README.md",
+    "src",
+    "!src/**/*.test.ts"
+  ],
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./rpc": "./src/rpc/contract.ts",
+    "./schema": "./src/schema.ts",
+    "./tui": "./src/tui.ts"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@opencode/plugin": "^2.0.22",
+    "@slvnco-opencode/config-resolver": "workspace:*",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3"
+  }
+}
