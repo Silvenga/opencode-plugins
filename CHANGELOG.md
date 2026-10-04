@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.0](https://github.com/Silvenga/opencode-plugins/compare/v0.1.0...v0.2.0) (2026-10-04)
+
+
+### Features
+
+* added cli ([37ac6af](https://github.com/Silvenga/opencode-plugins/commit/37ac6afac1461c5a83beb26cc49b56d76424e66c))
+* added mcp-servers plugin ([e7fec36](https://github.com/Silvenga/opencode-plugins/commit/e7fec369e304a0a4a5a39915338f1fc8ebc30b6d))
+
 ## 0.1.0 (2026-09-26)
 
 
