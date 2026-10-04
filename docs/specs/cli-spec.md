@@ -44,10 +44,14 @@ Document validation, in order:
 1. Parse the YAML document. A YAML parse error fails the document.
 2. The document must be an object with a non-empty string `name`. Otherwise the document fails with `<unknown>`.
 3. The registry must contain the document's `name`. An unregistered name fails the document.
-4. String values inside `config` are processed for references. `file` references are resolved, and a missing referenced file fails the document. `env` references resolve when the variable is set to a non-empty value; when unset or empty (matching the config-resolver env provider's failure condition), the raw reference remains in place and is not an error. Resolution follows the config-resolver scanning rules, relative to the config file being validated, inserted verbatim and non-recursively.
+4. String values inside `config` are processed for references:
+   - `file` references are resolved, and a missing referenced file fails the document.
+   - `env` references resolve when the variable is set to a non-empty value. When unset or empty, the raw reference remains in place and is not an error.
+   - The CLI does not receive plugin `vars`. Well-formed `var` references remain unchanged, and missing variables are not resolution errors.
+   - Resolution follows the config-resolver scanning rules, relative to the config file being validated, inserted verbatim and non-recursively. Malformed references still fail the document.
 5. The `config` value must validate against the registry entry's schema. A schema failure fails the document.
 
-Reference resolution differs from `@slvnco-opencode/config-resolver` deliberately, because validation is likely not run on the target machine. A missing file fails since the file ships with the config; an unset env variable does not fail since the target machine may define it.
+Reference resolution differs from `@slvnco-opencode/config-resolver` deliberately, because validation is likely not run on the target machine. A missing file fails since the file ships with the config. Missing environment or configured variables do not fail reference resolution, since the target machine or plugin options may define them. Schema validation still applies to unresolved reference strings.
 
 An empty document (null, produced by separators such as a trailing `---`) is skipped with no output line. Extra keys in a document are allowed and ignored. Each document is validated independently; duplicate names do not merge.
 

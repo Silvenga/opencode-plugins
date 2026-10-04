@@ -29,6 +29,55 @@ function runtime(env: Record<string, string> = {}): RuntimeDeps {
 }
 
 describe("validateFile", () => {
+  test("When a var reference occupies a string field then validateFile should pass without plugin vars", async () => {
+    const deps = makeRuntime({
+      fetcher: {
+        fetch: async () =>
+          "name: model-providers\nconfig:\n  providers:\n    p:\n      name: $(var:NAME)",
+      },
+    });
+    const lines: string[] = [];
+
+    const code = await validateFile("/config.yaml", deps, (line) => lines.push(line));
+
+    expect(code).toBe(0);
+    expect(lines).toEqual(["PASS: model-providers"]);
+  });
+
+  test.each(["$(var:)", "$(var:NAME", "$(var)"])(
+    "When a var reference is malformed %s then validateFile should fail resolution",
+    async (reference) => {
+      const deps = makeRuntime({
+        fetcher: { fetch: async () => `name: model-providers\nconfig:\n  value: ${reference}` },
+      });
+      const lines: string[] = [];
+
+      const code = await validateFile("/config.yaml", deps, (line) => lines.push(line));
+
+      expect(code).toBe(1);
+      expect(lines).toEqual([expect.stringMatching(/^FAILED: model-providers: .*reference/)]);
+    },
+  );
+
+  test("When a var reference occupies a numeric field then validateFile should fail schema validation", async () => {
+    const deps = makeRuntime({
+      fetcher: {
+        fetch: async () =>
+          "name: model-providers\nconfig:\n  providers:\n    p:\n      models:\n        m:\n          limit:\n            context: $(var:LIMIT)",
+      },
+    });
+    const lines: string[] = [];
+
+    const code = await validateFile("/config.yaml", deps, (line) => lines.push(line));
+
+    expect(code).toBe(1);
+    expect(lines).toEqual([
+      expect.stringMatching(
+        /^FAILED: model-providers: invalid configuration: providers.p.models.m.limit.context:/,
+      ),
+    ]);
+  });
+
   test("When a document matches the plugin schema then validateFile should print PASS with no error", async () => {
     const file = await fixture(`
 name: model-providers

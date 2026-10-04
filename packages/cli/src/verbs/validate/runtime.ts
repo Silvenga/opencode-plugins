@@ -43,10 +43,12 @@ export function makeLenientEnvProvider(
 export function makeReferenceProviders(deps: RuntimeDeps): {
   file: ReferenceProvider;
   env: ReferenceProvider;
+  var: ReferenceProvider;
 } {
   return {
     file: makeFileProvider(deps.fetcher, DEFAULT_TIMEOUT_MS, deps.homedir),
     env: makeLenientEnvProvider(deps.readEnv),
+    var: { resolve: async (input) => `$(var:${input})` },
   };
 }
 
