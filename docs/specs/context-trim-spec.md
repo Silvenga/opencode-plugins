@@ -19,7 +19,7 @@ Invalid or missing options use their defaults without failing the load.
 ## Rules
 
 - Persisted session history is never modified. Stubs apply only to the assembled model request. Transcripts, undo, the user's view, and the compaction input keep the original content.
-- The applier runs for model requests only, never for compaction.
+- The patcher runs for model requests only, never for compaction.
 - Stub text is computed once at record time and replayed verbatim on every request; a recorded directive never changes afterward.
 - Directives are scoped to one session. Child sessions do not inherit them.
 - The plugin writes no files. All state is plugin storage.
@@ -113,7 +113,7 @@ The `context.forget` description must state where IDs come from, the reason purp
 State flow:
 
 - A recorded directive starts `applied`; acceptance requires the target in the view.
-- `applied` becomes `orphaned` when the target stops appearing in the assembled context, and `orphaned` is pruned on the next applier run.
+- `applied` becomes `orphaned` when the target stops appearing in the assembled context, and `orphaned` is pruned on the next patcher run.
 
 ## Storage Keys
 
@@ -138,6 +138,6 @@ Fail open. The plugin never blocks OpenCode, never blocks a model request, and `
 |-------------------|-----------------------------------------------|----------------------------------------------------|
 | Setup             | Registration fails.                           | Tools and skill absent; sessions run untouched.     |
 | `context.forget`  | Session context read fails.                   | Error result; nothing recorded.                     |
-| Applier           | Any error while rewriting messages.           | Request is sent with messages unmodified.           |
+| Patcher            | Any error while patching messages.          | Request is sent with messages unmodified.           |
 | `context.restore` | Call ID absent from the session context view. | `not found` error.                                  |
 | Cleanup           | Storage removal fails.                        | Keys remain; retried on the next `session.deleted`. |

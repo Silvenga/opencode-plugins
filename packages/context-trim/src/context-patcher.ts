@@ -6,14 +6,14 @@ export interface RequestMessage {
   readonly content?: readonly unknown[];
 }
 
-export class Applier {
+export class ContextPatcher {
   private readonly store: DirectiveStore;
 
   constructor(store: DirectiveStore) {
     this.store = store;
   }
 
-  async apply(sessionID: string, messages: readonly RequestMessage[]): Promise<void> {
+  async patch(sessionID: string, messages: readonly RequestMessage[]): Promise<void> {
     try {
       const directives = await this.store.list(sessionID);
       const byCallID = new Map(
@@ -37,7 +37,7 @@ export class Applier {
           if (directive == null) {
             continue;
           }
-          if (applyToPart(part, directive)) {
+          if (patchPart(part, directive)) {
             seen.add(scrubbed);
           }
         }
@@ -58,7 +58,7 @@ function scrubbedID(part: object): string | undefined {
   return typeof id === "string" ? scrub(id) : undefined;
 }
 
-function applyToPart(part: object, directive: Directive): boolean {
+function patchPart(part: object, directive: Directive): boolean {
   const mutable = part as { type?: unknown; input?: unknown; result?: unknown };
   if (mutable.type === "tool-call" && directive.inputStub != null && "input" in mutable) {
     mutable.input = directive.inputStub;

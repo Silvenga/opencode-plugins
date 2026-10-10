@@ -1,5 +1,5 @@
 import { Plugin } from "@opencode/plugin";
-import { Applier } from "./applier.js";
+import { ContextPatcher } from "./context-patcher.js";
 import { parseOptions } from "./parse-options.js";
 import { Runtime } from "./runtime.js";
 import { skill } from "./skill.js";
@@ -14,7 +14,7 @@ export default Plugin.define({
     const options = parseOptions(ctx.options);
     const runtime = Runtime.fromContext(ctx);
     const store = new DirectiveStore(runtime.storage);
-    const applier = new Applier(store);
+    const patcher = new ContextPatcher(store);
     const cleanup = new SessionCleanup(store, (signal) => runtime.events(signal));
 
     const toolRegistration = await ctx.tool
@@ -39,7 +39,7 @@ export default Plugin.define({
       .catch(() => undefined);
 
     const hookRegistration = await ctx.session
-      .hook("context", (event) => applier.apply(event.sessionID, event.messages))
+      .hook("context", (event) => patcher.patch(event.sessionID, event.messages))
       .catch(() => undefined);
 
     const controller = new AbortController();

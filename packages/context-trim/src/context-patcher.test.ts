@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { Applier } from "./applier.js";
+import { ContextPatcher } from "./context-patcher.js";
 import { DirectiveStore, type Directive, type StorageLike } from "./store/directive-store.js";
 import { requestTurn } from "./trim/fixtures.js";
 
@@ -57,15 +57,15 @@ function inputDirective(callID: string): Directive {
   };
 }
 
-describe("Applier", () => {
-  test("When a directive covers output then apply should replace the tool result with the stub text", async () => {
+describe("ContextPatcher", () => {
+  test("When a directive covers output then patch should replace the tool result with the stub text", async () => {
     const storage = makeStorage();
     const store = new DirectiveStore(storage);
     await store.record("ses_1", outputDirective("call_1"));
     const messages = requestTurn({ callID: "call_1", tool: "bash", result: "full test output" });
-    const applier = new Applier(store);
+    const patcher = new ContextPatcher(store);
 
-    await applier.apply("ses_1", messages);
+    await patcher.patch("ses_1", messages);
 
     const result = partOf(messages, 1, 0).result;
     expect(result).toEqual({
@@ -74,7 +74,7 @@ describe("Applier", () => {
     });
   });
 
-  test("When a directive covers input then apply should replace the tool call input with the stub object", async () => {
+  test("When a directive covers input then patch should replace the tool call input with the stub object", async () => {
     const storage = makeStorage();
     const store = new DirectiveStore(storage);
     await store.record("ses_1", inputDirective("call_1"));
@@ -84,15 +84,15 @@ describe("Applier", () => {
       input: { command: "bash deploy.sh" },
       result: "ok",
     });
-    const applier = new Applier(store);
+    const patcher = new ContextPatcher(store);
 
-    await applier.apply("ses_1", messages);
+    await patcher.patch("ses_1", messages);
 
     const input = partOf(messages, 0, 1).input;
     expect(input).toEqual({ _trimmed: "bash deploy.sh, ~5000 tokens. spent script" });
   });
 
-  test("When applying then ids and names should remain unchanged", async () => {
+  test("When patching then ids and names should remain unchanged", async () => {
     const storage = makeStorage();
     const store = new DirectiveStore(storage);
     await store.record("ses_1", inputDirective("call_1"));
@@ -102,9 +102,9 @@ describe("Applier", () => {
       input: { command: "x" },
       result: "ok",
     });
-    const applier = new Applier(store);
+    const patcher = new ContextPatcher(store);
 
-    await applier.apply("ses_1", messages);
+    await patcher.patch("ses_1", messages);
 
     expect(partOf(messages, 0, 1).id).toBe("call_1");
     expect(partOf(messages, 0, 1).name).toBe("bash");
@@ -115,21 +115,21 @@ describe("Applier", () => {
     expect(resultContent).toHaveLength(1);
   });
 
-  test("When the target is absent from messages then apply should prune the directive", async () => {
+  test("When the target is absent from messages then patch should prune the directive", async () => {
     const storage = makeStorage();
     const store = new DirectiveStore(storage);
     await store.record("ses_1", outputDirective("call_1"));
     await store.record("ses_1", outputDirective("call_2"));
     const messages = requestTurn({ callID: "call_2", tool: "bash", result: "ok" });
-    const applier = new Applier(store);
+    const patcher = new ContextPatcher(store);
 
-    await applier.apply("ses_1", messages);
+    await patcher.patch("ses_1", messages);
 
     expect(await store.has("ses_1", "call_2")).toBe(true);
     expect(await store.has("ses_1", "call_1")).toBe(false);
   });
 
-  test("When apply throws mid-walk then it should send messages unmodified without rethrowing", async () => {
+  test("When patching throws mid-walk then it should send messages unmodified without rethrowing", async () => {
     const failing = {
       list: () => Promise.reject(new Error("storage down")),
       remove: () => Promise.resolve(),
@@ -138,19 +138,19 @@ describe("Applier", () => {
       removeAll: () => Promise.resolve(),
     } as unknown as DirectiveStore;
     const messages = requestTurn({ callID: "call_1", tool: "bash", result: "full output" });
-    const applier = new Applier(failing);
+    const patcher = new ContextPatcher(failing);
 
-    await expect(applier.apply("ses_1", messages)).resolves.toBeUndefined();
+    await expect(patcher.patch("ses_1", messages)).resolves.toBeUndefined();
 
     const result = partOf(messages, 1, 0).result;
     expect(result).toEqual({ type: "text", value: "full output" });
   });
 
-  test("When applied twice with the same inputs then the walk should be byte-stable", async () => {
+  test("When patched twice with the same inputs then the walk should be byte-stable", async () => {
     const storage = makeStorage();
     const store = new DirectiveStore(storage);
     await store.record("ses_1", inputDirective("call_1"));
-    const applier = new Applier(store);
+    const patcher = new ContextPatcher(store);
     const first = requestTurn({
       callID: "call_1",
       tool: "bash",
@@ -164,8 +164,8 @@ describe("Applier", () => {
       result: "ok",
     });
 
-    await applier.apply("ses_1", first);
-    await applier.apply("ses_1", second);
+    await patcher.patch("ses_1", first);
+    await patcher.patch("ses_1", second);
 
     expect(JSON.stringify(second)).toEqual(JSON.stringify(first));
   });
