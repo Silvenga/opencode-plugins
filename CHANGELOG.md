@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/Silvenga/opencode-plugins/compare/v0.3.0...v0.3.1) (2026-10-10)
+
+
+### Bug Fixes
+
+* exposed tool ids to agents ([f62288e](https://github.com/Silvenga/opencode-plugins/commit/f62288e8bc5054f7f39015cd5ee953126db9dd9a))
+
 ## [0.3.0](https://github.com/Silvenga/opencode-plugins/compare/v0.2.0...v0.3.0) (2026-10-10)
 
 
