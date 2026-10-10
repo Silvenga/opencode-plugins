@@ -15,7 +15,7 @@ export default Plugin.define({
     const runtime = Runtime.fromContext(ctx);
     const store = new DirectiveStore(runtime.storage);
     const patcher = new ContextPatcher(store);
-    const cleanup = new SessionCleanup(store, (signal) => runtime.events(signal));
+    const cleanup = new SessionCleanup(store, runtime.events);
 
     const toolRegistration = await ctx.tool
       .transform((editor) => {
@@ -26,11 +26,11 @@ export default Plugin.define({
         editor.add(
           forgetTool({
             store,
-            readView: (sessionID) => runtime.readView(sessionID),
+            readView: runtime.readView,
             minTokens: options.minTokens,
           }),
         );
-        editor.add(restoreTool({ readView: (sessionID) => runtime.readView(sessionID) }));
+        editor.add(restoreTool({ readView: runtime.readView }));
       })
       .catch(() => undefined);
 

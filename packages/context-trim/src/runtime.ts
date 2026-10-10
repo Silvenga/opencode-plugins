@@ -52,12 +52,11 @@ export class Runtime {
     };
   }
 
-  async readView(sessionID: string): Promise<SessionView> {
+  readonly readView = async (sessionID: string): Promise<SessionView> => {
     const messages = await this.ctx.session.context({ sessionID });
     return new SessionView(messages);
-  }
+  };
 
-  events(signal: AbortSignal): AsyncIterable<EncodedEvent> {
-    return this.ctx.event.subscribe({ signal });
-  }
+  readonly events = (signal: AbortSignal): AsyncIterable<EncodedEvent> =>
+    this.ctx.event.subscribe({ signal });
 }
