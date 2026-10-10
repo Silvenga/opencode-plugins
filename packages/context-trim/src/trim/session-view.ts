@@ -63,12 +63,12 @@ export class SessionView {
 
   resolve(id: string): ResolvedCall | undefined {
     const target = this.findTool(id);
-    if (target === undefined) {
+    if (target == null) {
       return undefined;
     }
     const { messageIndex, part } = target;
     const state = part.state;
-    if (state.status !== "completed" || state.input === undefined || state.content === undefined) {
+    if (state.status !== "completed" || state.input == null || state.content == null) {
       return undefined;
     }
     const primaryArgument = primaryArgumentOf(state.input);
@@ -109,7 +109,7 @@ export class SessionView {
       }
       for (const part of content) {
         const tool = asToolPart(part);
-        if (tool !== undefined && scrub(tool.id) === scrubbed) {
+        if (tool != null && scrub(tool.id) === scrubbed) {
           return { messageIndex, part: tool };
         }
       }
@@ -126,11 +126,11 @@ export class SessionView {
       }
       for (const part of content) {
         const tool = asToolPart(part);
-        if (tool === undefined || tool.state.status !== "completed") {
+        if (tool == null || tool.state.status !== "completed") {
           continue;
         }
         const state = tool.state;
-        if (state.input === undefined || tool.name !== toolName) {
+        if (state.input == null || tool.name !== toolName) {
           continue;
         }
         if (primaryArgumentOf(state.input) !== primaryArgument) {
@@ -144,14 +144,14 @@ export class SessionView {
 }
 
 function asToolPart(part: unknown): ViewToolPart | undefined {
-  if (typeof part !== "object" || part === null) {
+  if (typeof part !== "object" || part == null) {
     return undefined;
   }
   const candidate = part as ViewToolPart;
   return candidate.type === "tool" &&
     typeof candidate.id === "string" &&
     typeof candidate.state === "object" &&
-    candidate.state !== null
+    candidate.state != null
     ? candidate
     : undefined;
 }

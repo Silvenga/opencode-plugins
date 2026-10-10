@@ -23,7 +23,7 @@ export function restoreTool(deps: {
       const id = readID(rawInput);
       const view = await deps.readView(context.sessionID);
       const call = view.resolve(id);
-      if (call === undefined) {
+      if (call == null) {
         throw new Error(`context.restore: ${id} not found in the session context view`);
       }
       const omittedNote =
@@ -36,7 +36,7 @@ export function restoreTool(deps: {
 }
 
 function readID(rawInput: unknown): string {
-  if (typeof rawInput !== "object" || rawInput === null) {
+  if (typeof rawInput !== "object" || rawInput == null) {
     throw new Error("context.restore: id must be a string");
   }
   const id = (rawInput as { id?: unknown }).id;

@@ -64,7 +64,7 @@ export function forgetTool(deps: {
           hasDirective: (id) => knownCallIDs.has(scrub(id)),
           minTokens: deps.minTokens,
         });
-        if (outcome === undefined) {
+        if (outcome == null) {
           continue;
         }
         outcomes.push(outcome);
@@ -86,7 +86,7 @@ export function forgetTool(deps: {
 function readTargets(rawInput: unknown): Target[] {
   if (
     typeof rawInput !== "object" ||
-    rawInput === null ||
+    rawInput == null ||
     !Array.isArray((rawInput as { targets?: unknown }).targets)
   ) {
     throw new Error("context.forget: targets must be a non-empty array");
@@ -96,7 +96,7 @@ function readTargets(rawInput: unknown): Target[] {
     throw new Error("context.forget: targets must be a non-empty array");
   }
   return rawTargets.map((raw, index) => {
-    if (typeof raw !== "object" || raw === null) {
+    if (typeof raw !== "object" || raw == null) {
       throw new Error(`context.forget: targets[${index}] must be an object`);
     }
     const candidate = raw as { id?: unknown; parts?: unknown; reason?: unknown };
@@ -113,7 +113,7 @@ function readTargets(rawInput: unknown): Target[] {
       typeof candidate.reason === "string" && candidate.reason.trim().length > 0
         ? candidate.reason
         : undefined;
-    return reason === undefined
+    return reason == null
       ? { id: candidate.id, parts: candidate.parts as Parts }
       : { id: candidate.id, parts: candidate.parts as Parts, reason };
   });

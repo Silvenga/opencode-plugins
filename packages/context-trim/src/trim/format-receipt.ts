@@ -25,11 +25,11 @@ export function formatReceipt(outcomes: readonly Outcome[], stats: ReceiptStats)
     }
   }
   for (const outcome of trimmed) {
-    if (outcome.warning !== undefined) {
+    if (outcome.warning != null) {
       lines.push(`warning ${outcome.id}: ${outcome.warning} - trimmed anyway`);
     }
   }
-  if (stats.oldestMessageIndex !== undefined && stats.tailTokens !== undefined) {
+  if (stats.oldestMessageIndex != null && stats.tailTokens != null) {
     lines.push(
       `cache: oldest edit at message ${stats.oldestMessageIndex + 1} of ${stats.messageCount}, ~${stats.tailTokens} tokens re-prefill once`,
     );

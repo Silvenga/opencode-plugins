@@ -45,7 +45,7 @@ function adjudicateTarget(
   deps: { view: SessionView; hasDirective: (id: string) => boolean; minTokens: number },
 ): Outcome {
   const call = deps.view.resolve(target.id);
-  if (call === undefined) {
+  if (call == null) {
     return { status: "skipped", id: target.id, reason: "not found" };
   }
   if (deps.hasDirective(target.id)) {
@@ -59,7 +59,7 @@ function adjudicateTarget(
     return { status: "skipped", id: target.id, reason: "too small" };
   }
   const reason =
-    target.reason !== undefined && target.reason.trim().length > 0 ? target.reason : undefined;
+    target.reason != null && target.reason.trim().length > 0 ? target.reason : undefined;
 
   const stubCall = {
     tool: call.tool,

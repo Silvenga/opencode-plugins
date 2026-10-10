@@ -28,7 +28,7 @@ function partOf(
 ): Record<string, unknown> {
   const message = messages[messageIndex] as { content?: readonly unknown[] };
   const part = message.content?.[partIndex];
-  if (part === undefined) {
+  if (part == null) {
     throw new Error("missing part");
   }
   return part as Record<string, unknown>;

@@ -40,7 +40,7 @@ export class SessionCleanup {
         continue;
       }
       const sessionID = readSessionID(event);
-      if (sessionID === undefined) {
+      if (sessionID == null) {
         continue;
       }
       try {

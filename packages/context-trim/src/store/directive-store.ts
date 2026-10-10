@@ -36,7 +36,7 @@ export class DirectiveStore {
 
   async has(sessionID: string, callID: string): Promise<boolean> {
     const value = await this.storage.get(DirectiveStore.key(sessionID, callID));
-    return value !== undefined && value !== null && isDirective(value);
+    return value != null && isDirective(value);
   }
 
   async record(sessionID: string, directive: Directive): Promise<void> {
@@ -70,7 +70,7 @@ export class DirectiveStore {
 }
 
 function isDirective(value: unknown): value is Directive {
-  if (typeof value !== "object" || value === null) {
+  if (typeof value !== "object" || value == null) {
     return false;
   }
   const candidate = value as Partial<Directive>;

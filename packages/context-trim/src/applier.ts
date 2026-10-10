@@ -26,15 +26,15 @@ export class Applier {
           continue;
         }
         for (const part of content) {
-          if (typeof part !== "object" || part === null) {
+          if (typeof part !== "object" || part == null) {
             continue;
           }
           const scrubbed = scrubbedID(part);
-          if (scrubbed === undefined) {
+          if (scrubbed == null) {
             continue;
           }
           const directive = byCallID.get(scrubbed);
-          if (directive === undefined) {
+          if (directive == null) {
             continue;
           }
           if (applyToPart(part, directive)) {
@@ -57,11 +57,11 @@ function scrubbedID(part: object): string | undefined {
 
 function applyToPart(part: object, directive: Directive): boolean {
   const mutable = part as { type?: unknown; input?: unknown; result?: unknown };
-  if (mutable.type === "tool-call" && directive.inputStub !== undefined && "input" in mutable) {
+  if (mutable.type === "tool-call" && directive.inputStub != null && "input" in mutable) {
     mutable.input = directive.inputStub;
     return true;
   }
-  if (mutable.type === "tool-result" && directive.outputStub !== undefined) {
+  if (mutable.type === "tool-result" && directive.outputStub != null) {
     mutable.result = { type: "text", value: directive.outputStub };
     return true;
   }
