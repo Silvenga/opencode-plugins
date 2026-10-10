@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@slvnco-opencode/context-trim",
+  "version": "0.2.0",
+  "license": "MIT",
+  "author": "Mark Lopez <m@silvenga.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Silvenga/opencode-plugins.git",
+    "directory": "packages/context-trim"
+  },
+  "files": [
+    "README.md",
+    "src",
+    "!src/**/*.test.ts",
+    "!src/**/fixtures.ts"
+  ],
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@opencode/plugin": "^2.0.22"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3"
+  }
+}

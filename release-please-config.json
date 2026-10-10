@@ -21,6 +21,11 @@
     },
     {
       "type": "json",
+      "path": "packages/context-trim/package.json",
+      "jsonpath": "$.version"
+    },
+    {
+      "type": "json",
       "path": "packages/model-providers/package.json",
       "jsonpath": "$.version"
     }
