@@ -1,3 +1,4 @@
+import type { Info as ToolInfo } from "@opencode/plugin/promise/tool";
 import type { SessionView } from "../trim/session-view.js";
 
 export function restoreTool(deps: {
@@ -32,7 +33,7 @@ export function restoreTool(deps: {
         content: `restored ${call.tool} ${call.callID}\ninput:\n${JSON.stringify(call.input, null, 2)}\noutput:\n${call.outputText}${omittedNote}`,
       };
     },
-  };
+  } satisfies ToolInfo;
 }
 
 function readID(rawInput: unknown): string {

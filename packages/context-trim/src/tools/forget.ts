@@ -1,3 +1,4 @@
+import type { Info as ToolInfo } from "@opencode/plugin/promise/tool";
 import type { Directive, DirectiveStore } from "../store/directive-store.js";
 import {
   adjudicate,
@@ -79,7 +80,7 @@ export function forgetTool(deps: {
       );
       return { content: formatReceipt(outcomes, statsOf(outcomes, view)) };
     },
-  };
+  } satisfies ToolInfo;
 }
 
 function readTargets(rawInput: unknown): Target[] {
