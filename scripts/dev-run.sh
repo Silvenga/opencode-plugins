@@ -65,6 +65,10 @@ cat > "$STATE/opencode.jsonc" <<JSON
     {
       "package": "file://$DIST/mcp-servers",
       "options": {}
+    },
+    {
+      "package": "file://$DIST/context-trim",
+      "options": {}
     }
   ]
 }

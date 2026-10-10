@@ -47,3 +47,15 @@ Configures MCP servers.
   ]
 }
 ```
+
+### @slvnco-opencode/context-trim
+
+Agent tools to allow the agent to trim its own context.
+
+```jsonc
+{
+  "plugins": [
+    "@slvnco-opencode/context-trim"
+  ]
+}
+```
