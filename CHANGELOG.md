@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.0](https://github.com/Silvenga/opencode-plugins/compare/v0.2.0...v0.3.0) (2026-10-10)
+
+
+### Features
+
+* added context-trim plugin ([#10](https://github.com/Silvenga/opencode-plugins/issues/10)) ([cef9981](https://github.com/Silvenga/opencode-plugins/commit/cef9981902b6a40aa57aaa3966ad036b1d0598cc))
+* added var references provider ([fc940e6](https://github.com/Silvenga/opencode-plugins/commit/fc940e6b74ba6159584779f429f75b77dd984d95))
+
 ## [0.2.0](https://github.com/Silvenga/opencode-plugins/compare/v0.1.0...v0.2.0) (2026-10-04)
 
 
