@@ -11,3 +11,4 @@ minimumReleaseAgeExclude:
   - "@opencode/protocol@2.0.10 || 2.0.11"
   - "@opencode/schema@2.0.10 || 2.0.11"
   - "@opencode/util@2.0.10 || 2.0.11"
+  - "@types/node@26.6.5"

@@ -29,7 +29,7 @@
     "@slvnco-opencode/config-resolver": "workspace:*",
     "@slvnco-opencode/mcp-servers": "workspace:*",
     "@slvnco-opencode/model-providers": "workspace:*",
-    "@types/node": "^26.6.4",
+    "@types/node": "^26.6.5",
     "commander": "^15.0.0",
     "esbuild": "^0.28.2",
     "typescript": "^7.0.2",
