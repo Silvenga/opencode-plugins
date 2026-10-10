@@ -1,28 +1,11 @@
 import { describe, expect, test } from "vitest";
-import { DirectiveStore, type StorageLike } from "../store/directive-store.js";
+import { DirectiveStore } from "../store/directive-store.js";
+import { makeStorage } from "../store/fixtures.js";
 import { assistantToolMessage, userMessage } from "../trim/fixtures.js";
 import { SessionView } from "../trim/session-view.js";
 import { forgetTool } from "./forget.js";
 
 const bigOutput = "x".repeat(4000);
-
-function makeStorage(): StorageLike & { map: Map<string, unknown> } {
-  const map = new Map<string, unknown>();
-  return {
-    map,
-    get: async (key) => map.get(key),
-    set: async (key, value) => {
-      map.set(key, value);
-    },
-    remove: async (key) => {
-      map.delete(key);
-    },
-    scan: async (prefix) =>
-      [...map.entries()]
-        .filter(([key]) => key.startsWith(prefix))
-        .map(([key, value]) => ({ key, value })),
-  };
-}
 
 function makeDeps() {
   const storage = makeStorage();
