@@ -11,7 +11,10 @@ export function restoreTool(deps: {
     input: {
       type: "object",
       properties: {
-        id: { type: "string", description: "Tool call ID copied from the tool call block" },
+        id: {
+          type: "string",
+          description: "Tool call ID from the `[call <id>]` result marker or the tool call block",
+        },
       },
       required: ["id"],
       additionalProperties: false,

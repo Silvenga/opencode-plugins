@@ -46,7 +46,7 @@ Input:
 ```
 
 - `targets` is required and non-empty.
-- `id` is the tool call ID as it appears in the agent's own tool call block. Matching scrubs both sides with `[^a-zA-Z0-9_-]` to `_` before comparing, because protocols may rewrite IDs on the wire.
+- `id` is the tool call ID as it appears in the `[call <id>]` marker at the start of the tool result, or in the agent's own tool call block. Matching scrubs both sides with `[^a-zA-Z0-9_-]` to `_` before comparing, because protocols may rewrite IDs on the wire.
 - `parts` is required and accepts `output`, `input`, or `both`.
 - `reason` is optional. It becomes the stub text the model reads in place of the content.
 
@@ -90,11 +90,18 @@ Input:
 - Signature: the primary argument truncated to 60 characters on a single line.
 - A target with no `reason` uses the default stub text, which names `context.restore` as the recovery path.
 
+## Call IDs
+
+- Every text tool result in an assembled model request is prefixed with `[call <id>]`, using the canonical call ID from the session view, so the agent can target calls even when its protocol does not show tool call IDs.
+- A stubbed result shows only the stub; the stub already carries the call ID.
+- Non-text results, parts without an ID, and tool call inputs are never modified by annotation.
+- Annotation is request-only: persisted session history, transcripts, the user's view, and the compaction input keep the original result text. It applies to the same model requests as stubs and never to compaction.
+
 ## Skill
 
 The plugin registers the skill `context-trim` with `autoinvoke: true`. Its description advertises it for long sessions and ahead of context pressure. The body must teach:
 
-- Copying the call ID from the tool call block of the assistant turn.
+- Copying the call ID from the `[call <id>]` marker that starts each tool result, or from the tool call block of the assistant turn.
 - Trimming superseded reads, duplicate outputs, spent build, test, and browser logs, and the previous browser snapshot once a newer one has arrived.
 - Never trimming the newest read of a resource.
 - Writing reasons a future turn can act on.
@@ -139,5 +146,6 @@ Fail open. The plugin never blocks OpenCode, never blocks a model request, and `
 | Setup             | Registration fails.                           | Tools and skill absent; sessions run untouched.     |
 | `context.forget`  | Session context read fails.                   | Error result; nothing recorded.                     |
 | Patcher            | Any error while patching messages.          | Request is sent with messages unmodified.           |
+| Annotation         | Any error while annotating results.         | Annotated results keep their markers; the rest are sent unannotated. |
 | `context.restore` | Call ID absent from the session context view. | `not found` error.                                  |
 | Cleanup           | Storage removal fails.                        | Keys remain; retried on the next `session.deleted`. |

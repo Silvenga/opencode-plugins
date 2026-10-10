@@ -9,5 +9,7 @@ describe("skill", () => {
     expect(info.autoinvoke).toBe(true);
     expect(info.description).toContain("context.forget");
     expect(info.description).toContain("context.restore");
+    expect(info.content).toContain("[call <id>]");
+    expect(info.content).toContain("tool call block");
   });
 });

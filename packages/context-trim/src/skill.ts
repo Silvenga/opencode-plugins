@@ -12,7 +12,7 @@ export function skill(): Skill.Info {
     content: [
       "## Trimming with context.forget",
       "",
-      "- Copy the call id from the tool call block of the assistant turn that made the call.",
+      "- Every tool result starts with its call id as `[call <id>]`; copy the id from that marker, or from the tool call block of the assistant turn that made the call.",
       "- `parts` selects what is replaced: `output` (the result), `input` (the arguments), or `both` (large script or command payloads).",
       "- `reason` is the note kept in place of the content. Write one a future turn can act on.",
       "",

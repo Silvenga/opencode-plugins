@@ -19,7 +19,7 @@ export function forgetTool(deps: {
   return {
     name: "forget",
     description:
-      "Replace spent tool call content with short stubs to reclaim context. Copy each target id from the tool call block of the assistant turn that made the call. parts selects what is replaced: output, input, or both. reason is the short note kept in place of the content; write one a future turn can act on. Batch several targets into one call, preferring end-of-subtask checkpoints. Only trim calls whose result you have already seen.",
+      "Replace spent tool call content with short stubs to reclaim context. Copy each target id from the `[call <id>]` marker at the start of the tool result, or from the tool call block of the assistant turn that made the call. parts selects what is replaced: output, input, or both. reason is the short note kept in place of the content; write one a future turn can act on. Batch several targets into one call, preferring end-of-subtask checkpoints. Only trim calls whose result you have already seen.",
     input: {
       type: "object",
       properties: {
@@ -29,7 +29,11 @@ export function forgetTool(deps: {
           items: {
             type: "object",
             properties: {
-              id: { type: "string", description: "Tool call ID copied from the tool call block" },
+              id: {
+                type: "string",
+                description:
+                  "Tool call ID from the `[call <id>]` result marker or the tool call block",
+              },
               parts: {
                 type: "string",
                 enum: ["output", "input", "both"],

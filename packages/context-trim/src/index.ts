@@ -1,4 +1,5 @@
 import { Plugin } from "@opencode/plugin";
+import { annotateCallIDs } from "./annotate.js";
 import { ContextPatcher } from "./context-patcher.js";
 import { parseOptions } from "./parse-options.js";
 import { Runtime } from "./runtime.js";
@@ -39,7 +40,10 @@ export default Plugin.define({
       .catch(() => undefined);
 
     const hookRegistration = await ctx.session
-      .hook("context", (event) => patcher.patch(event.sessionID, event.messages))
+      .hook("context", (event) => {
+        annotateCallIDs(event.messages);
+        return patcher.patch(event.sessionID, event.messages);
+      })
       .catch(() => undefined);
 
     const controller = new AbortController();
