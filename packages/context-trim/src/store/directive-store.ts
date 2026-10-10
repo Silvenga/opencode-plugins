@@ -1,4 +1,4 @@
-import { PARTS, type Parts } from "../trim/adjudicate.js";
+import { isParts, type Parts } from "../trim/adjudicate.js";
 import { scrub } from "../trim/scrub.js";
 
 export interface Directive {
@@ -78,7 +78,7 @@ function isDirective(value: unknown): value is Directive {
     typeof candidate.callID === "string" &&
     typeof candidate.tool === "string" &&
     typeof candidate.primaryArgument === "string" &&
-    (PARTS as readonly unknown[]).includes(candidate.parts) &&
+    isParts(candidate.parts) &&
     typeof candidate.estimatedTokens === "number"
   );
 }

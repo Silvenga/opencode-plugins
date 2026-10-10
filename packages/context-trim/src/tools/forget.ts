@@ -1,9 +1,8 @@
 import type { Directive, DirectiveStore } from "../store/directive-store.js";
 import {
   adjudicate,
-  PARTS,
+  isParts,
   type Outcome,
-  type Parts,
   type Target,
   type TrimmedOutcome,
 } from "../trim/adjudicate.js";
@@ -103,10 +102,7 @@ function readTargets(rawInput: unknown): Target[] {
     if (typeof candidate.id !== "string" || candidate.id.length === 0) {
       throw new Error(`context.forget: targets[${index}].id must be a non-empty string`);
     }
-    if (
-      typeof candidate.parts !== "string" ||
-      !(PARTS as readonly string[]).includes(candidate.parts)
-    ) {
+    if (!isParts(candidate.parts)) {
       throw new Error(`context.forget: targets[${index}].parts must be one of output, input, both`);
     }
     const reason =
@@ -114,8 +110,8 @@ function readTargets(rawInput: unknown): Target[] {
         ? candidate.reason
         : undefined;
     return reason == null
-      ? { id: candidate.id, parts: candidate.parts as Parts }
-      : { id: candidate.id, parts: candidate.parts as Parts, reason };
+      ? { id: candidate.id, parts: candidate.parts }
+      : { id: candidate.id, parts: candidate.parts, reason };
   });
 }
 

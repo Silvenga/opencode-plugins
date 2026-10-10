@@ -13,10 +13,10 @@ interface HostContext {
     }>;
   };
   readonly session: {
-    context(input: { sessionID: string }): Promise<readonly unknown[]>;
+    context(input: { sessionID: string }): Promise<readonly ViewMessage[]>;
   };
   readonly event: {
-    subscribe(options?: { signal?: AbortSignal }): AsyncIterable<unknown>;
+    subscribe(options?: { signal?: AbortSignal }): AsyncIterable<EncodedEvent>;
   };
 }
 
@@ -34,7 +34,7 @@ export class Runtime {
   get storage(): StorageLike {
     return {
       get: (key) => this.ctx.storage.get(key),
-      set: (key, value) => this.ctx.storage.set(key, value as never),
+      set: (key, value) => this.ctx.storage.set(key, value),
       remove: (key) => this.ctx.storage.remove(key),
       scan: async (prefix) => {
         const entries: { key: string; value: unknown }[] = [];
@@ -54,10 +54,10 @@ export class Runtime {
 
   async readView(sessionID: string): Promise<SessionView> {
     const messages = await this.ctx.session.context({ sessionID });
-    return new SessionView(messages as unknown as readonly ViewMessage[]);
+    return new SessionView(messages);
   }
 
   events(signal: AbortSignal): AsyncIterable<EncodedEvent> {
-    return this.ctx.event.subscribe({ signal }) as AsyncIterable<EncodedEvent>;
+    return this.ctx.event.subscribe({ signal });
   }
 }

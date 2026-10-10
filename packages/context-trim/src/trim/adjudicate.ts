@@ -5,6 +5,10 @@ import { inputStub, outputStub, signatureOf } from "./stub.js";
 export const PARTS = ["output", "input", "both"] as const;
 export type Parts = (typeof PARTS)[number];
 
+export function isParts(value: unknown): value is Parts {
+  return typeof value === "string" && (PARTS as readonly string[]).includes(value);
+}
+
 export interface Target {
   readonly id: string;
   readonly parts: Parts;

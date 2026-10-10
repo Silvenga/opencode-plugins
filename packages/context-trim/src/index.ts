@@ -11,7 +11,7 @@ import { restoreTool } from "./tools/restore.js";
 export default Plugin.define({
   id: "slvn-opencode.context-trim",
   async setup(ctx) {
-    const options = parseOptions(ctx.options as Record<string, unknown>);
+    const options = parseOptions(ctx.options);
     const runtime = Runtime.fromContext(ctx);
     const store = new DirectiveStore(runtime.storage);
     const applier = new Applier(store);

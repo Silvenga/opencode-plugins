@@ -51,7 +51,10 @@ export class Applier {
 }
 
 function scrubbedID(part: object): string | undefined {
-  const id = (part as { id?: unknown }).id;
+  if (!("id" in part)) {
+    return undefined;
+  }
+  const id = part.id;
   return typeof id === "string" ? scrub(id) : undefined;
 }
 

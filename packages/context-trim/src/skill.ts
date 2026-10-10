@@ -2,13 +2,13 @@ import { fileURLToPath } from "node:url";
 import { Skill } from "@opencode/plugin";
 
 export function skill(): Skill.Info {
-  return {
-    id: "context-trim" as Skill.Info["id"],
-    name: "Context Trim" as Skill.Info["name"],
+  return Skill.Info.make({
+    id: Skill.ID.make("context-trim"),
+    name: Skill.Name.make("Context Trim"),
     description:
       "Trim large spent tool outputs and inputs from context with context.forget, and restore originals with context.restore. Load for long sessions, repeated tool output, browser automation loops, or ahead of context pressure.",
     autoinvoke: true,
-    path: fileURLToPath(import.meta.url) as Skill.Info["path"],
+    path: Skill.Info.fields.path.make(fileURLToPath(import.meta.url)),
     content: [
       "## Trimming with context.forget",
       "",
@@ -33,5 +33,5 @@ export function skill(): Skill.Info {
       "- Prefer `context.restore` over re-running tools when the original was trimmed. It returns the original input and output as its own result, without touching history.",
       "- Calls older than the latest compaction are not restorable.",
     ].join("\n"),
-  };
+  });
 }
